@@ -16,4 +16,4 @@ if response.ok:
    desc = soup.find('div',{"id": "product_description"}).find_next('p').get_text()
    catego = soup.find("ul",{"class": "breadcrumb"}).find_next("li").find_next("li").find_next("li").get_text()
    
-   print("Catégorie : " + catego + '\n\n' + titre + '\n\n' + "image : " + str(image.attrs['src']) + '\n\n' + "Description : " + str(desc) + '\n\n' + "Informations : " + infos.text)
+   print('\n\n' + "Url : " + url + '\n\n' + "Catégorie : " + catego + '\n\n' + titre + '\n\n' + "image : " + str(image.attrs['src']) + '\n\n' + "Description : " + str(desc) + '\n\n' + "Informations : " + infos.text)
