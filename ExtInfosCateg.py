@@ -2,6 +2,7 @@ import requests as req
 from bs4 import BeautifulSoup
 
     
+
 links = []
 
 url = "https://books.toscrape.com/catalogue/category/books/travel_2/index.html"
