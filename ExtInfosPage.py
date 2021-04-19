@@ -33,5 +33,5 @@ def Infos_Page(url):
     
 
 
-url = "http://books.toscrape.com/catalogue/its-only-the-himalayas_981/index.html"
-Infos_Page(url)
+
+Infos_Page("http://books.toscrape.com/catalogue/its-only-the-himalayas_981/index.html")
