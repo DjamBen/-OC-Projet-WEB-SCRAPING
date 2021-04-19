@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import csv
 
 
+
 def Infos_Page(url):
 
     response = req.get(url)
