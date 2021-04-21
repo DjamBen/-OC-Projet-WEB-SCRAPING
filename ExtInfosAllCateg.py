@@ -1,6 +1,8 @@
 import requests as req
 from bs4 import BeautifulSoup
 import csv
+import os 
+import re
 
 
 
@@ -47,12 +49,16 @@ def get_books(url):
 def main():
     cats = get_categories("https://books.toscrape.com/")
     books = []
-    for cat in cats:
+    
+    for idx, cat in enumerate(cats):
+        book = get_books(cat)
+
+        with open ("categ" + ' ' + str(idx) + ".csv", "w", encoding="utf-8", newline="") as f:
+            writer = csv.DictWriter(f, book[0].keys())
+            writer.writeheader()
+            writer.writerows(book)
         books += get_books(cat)
-    with open ("all.csv", "w", encoding="utf-8", newline="") as f:
-        writer = csv.DictWriter(f, books[0].keys())
-        writer.writeheader()
-        writer.writerows(books)
+    
 
 def get_books_single_page(soup):
     print("get_books_single_page:")
@@ -65,6 +71,7 @@ def get_books_single_page(soup):
         book = get_book_infos("https://books.toscrape.com/catalogue" + page)
         if book is not None:
             books.append(book)
+    
     return books
             
 def get_book_infos(url):
@@ -78,23 +85,39 @@ def get_book_infos(url):
             desc = ""
         else:
             desc = desc.find_next('p').get_text()
-        catego = soup.find("ul",{"class": "breadcrumb"}).find_next("li").find_next("li").find_next("li").get_text()
+        catego = soup.find("ul",{"class": "breadcrumb"}).find_next("li").find_next("li").find_next("li").get_text().strip('\n')
         infos = {}
         for row in infos_table.find_all("tr"):
             infos[row.th.get_text()] = row.td.get_text()
-        
-        
+    
+    
+    
+    path = catego
+    
+    if not os.path.exists(path):
+        os.makedirs(path)
+    Titre = soup.find('h1').text
+    title = re.sub('[^a-zA-Z0-9 \n]', '', Titre)
+    Image = soup.img["src"].strip('../../')
+    Image_book = 'http://books.toscrape.com/' + Image       
+    with open(path + '/' + title + ".jpg", "wb") as file:
+        res = req.get(Image_book)
+        file.write(res.content)
+
+
         
         return {
-            "image": soup.img["src"], 
+            "Categorie": catego,
+            "image": Image_book, 
             "Titre": soup.title.text,
             "Description": desc,
-            "Categorie": catego,
             **infos
         }
+    
     print("failed")
+    
+    
+    
 main()
-
-
 
    
